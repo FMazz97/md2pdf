@@ -1,0 +1,9 @@
+{
+  "name": "pdf-export",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "pdfjs-dist": ">=4.0.0",
+    "puppeteer-core": ">=22.0.0"
+  }
+}

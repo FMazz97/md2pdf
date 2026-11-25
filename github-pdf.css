@@ -1,0 +1,167 @@
+/* GitHub style (light theme) for PDF printing */
+:root {
+  --fg: #1f2328; --muted: #59636e; --border: #d1d9e0; --subtle: #f6f8fa; --accent: #0969da;
+}
+@page { size: A4; margin: 18mm 16mm; }
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+html { font-size: 10.5pt; }
+body {
+  margin: 0; color: var(--fg); background: #fff; line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
+  overflow-wrap: break-word;
+}
+a { color: var(--accent); text-decoration: none; }
+
+/* ---- Pagination ---- */
+section.doc { break-before: page; }                 /* each Markdown file starts on a new page */
+section.doc > :first-child { margin-top: 0; }
+
+h1, h2, h3, h4, h5, h6 { break-after: avoid; break-inside: avoid; }   /* a heading is never left alone at the bottom of a page */
+p { orphans: 3; widows: 3; }
+p:has(+ ul), p:has(+ ol), p:has(+ table), p:has(+ pre), p:has(+ blockquote) { break-after: avoid; }
+pre, table, tr, blockquote, ul, ol, li, figure, img, .cover,
+div.note, div.tip, div.important, div.warning, div.caution { break-inside: avoid; }
+thead { display: table-header-group; }
+/* Very tall blocks (class added by print-pdf.mjs) may split across pages; otherwise they would jump to the next page and leave gaps */
+.breakable { break-inside: auto !important; }
+
+/* ---- Headings ---- */
+h1, h2, h3, h4, h5, h6 { margin: 1.5em 0 .7em; font-weight: 600; line-height: 1.25; }
+h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+h3 { font-size: 1.25em; }
+h4 { font-size: 1em; }
+h5, h6 { font-size: .875em; }
+h6 { color: var(--muted); }
+
+p, ul, ol, pre, table, blockquote { margin: 0 0 1em; }
+ul, ol { padding-left: 2em; }
+li + li { margin-top: .25em; }
+ul.task-list, ul.task-list ul { list-style: none; padding-left: 0; }
+hr { height: 0; border: 0; border-bottom: 1px solid var(--border); margin: 1.5em 0; }
+
+/* ---- Images ---- */
+img { max-width: 100%; height: auto; }
+.cover { text-align: center; margin: 0 0 1.5em; }
+.cover p { margin: 0; }
+
+/* ---- Code ---- */
+code, pre, tt {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+:not(pre) > code { padding: .2em .4em; font-size: 85%; background: #818b981f; border-radius: 6px; }
+pre {
+  padding: 12px 16px; font-size: 85%; line-height: 1.45; background: var(--subtle); border-radius: 6px;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+pre code { padding: 0; font-size: 100%; background: transparent; }
+
+/* ---- Tables ---- */
+table { border-collapse: collapse; border-spacing: 0; max-width: 100%; }
+th, td { padding: 6px 13px; border: 1px solid var(--border); vertical-align: top; }
+th { font-weight: 600; }
+tbody tr { background: #fff; }
+tbody tr:nth-child(2n) { background: var(--subtle); }
+colgroup { display: none; }
+
+/* ---- Quotes ---- */
+blockquote { padding: 0 1em; color: var(--muted); border-left: .25em solid var(--border); }
+blockquote > :last-child { margin-bottom: 0; }
+
+/* ---- GitHub alerts: > [!NOTE] / TIP / IMPORTANT / WARNING / CAUTION ---- */
+div.note, div.tip, div.important, div.warning, div.caution {
+  margin: 0 0 1em; padding: .5em 1em; border-left: .25em solid var(--c);
+}
+div.note { --c: #0969da; }
+div.tip { --c: #1a7f37; }
+div.important { --c: #8250df; }
+div.warning { --c: #e36209; }
+div.caution { --c: #d1242f; }
+div.note > .title, div.tip > .title, div.important > .title, div.warning > .title, div.caution > .title {
+  color: var(--c); font-weight: 600; margin: 0 0 .25em;
+}
+div.note > .title p, div.tip > .title p, div.important > .title p, div.warning > .title p, div.caution > .title p {
+  margin: 0;
+}
+div.note > :last-child, div.tip > :last-child, div.important > :last-child,
+div.warning > :last-child, div.caution > :last-child { margin-bottom: 0; }
+
+/* ---- Footnotes ---- */
+section.footnotes { font-size: .9em; color: var(--muted); border-top: 1px solid var(--border); margin-top: 2em; }
+
+/* ---- Cover page ---- */
+.titlepage {
+  height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; break-after: page;
+}
+.tp-title { margin: 0; font-size: 2.8em; font-weight: 700; line-height: 1.15; }
+.tp-subtitle { margin: .8em 0 0; font-size: 1.3em; color: var(--muted); }
+.tp-meta { margin: 2.5em 0 0; color: var(--muted); }
+
+/* ---- Table of contents ---- */
+nav.toc { break-after: page; }
+.toc-title { margin: 0 0 1em; font-size: 2em; font-weight: 600; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+.toc ul { list-style: none; padding: 0; margin: 0; break-inside: auto; }
+.toc li { break-inside: avoid; margin: .15em 0; }
+.toc a { color: var(--fg); }
+.toc li.toc-1 { margin-top: .8em; font-weight: 600; }
+.toc li.toc-2 { padding-left: 1.2em; }
+.toc li.toc-3 { padding-left: 2.4em; font-size: .95em; color: var(--muted); }
+
+/* ---- Version tag on the cover page ---- */
+.tp-version { margin: 1.6em 0 0; }
+.tp-version span {
+  display: inline-block; padding: .15em .9em; font-size: 1.05em; color: var(--muted);
+  background: var(--subtle); border: 1px solid var(--border); border-radius: 2em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* ---- Table of contents: leader dots and page number ---- */
+.toc li a { display: flex; align-items: baseline; }
+.toc .t { flex: 0 1 auto; }
+.toc .dots { flex: 1 1 1em; min-width: 1em; margin: 0 .25em; display: flex; justify-content: space-between; overflow: hidden; color: #000; }
+.toc .dots i { font-style: normal; }
+.toc .pn { flex: none; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Invisible markers used only during generation to find the page of each heading */
+.hm { font-size: 1px; color: #fff; }
+
+/* ---- Colori del codice: tavolozza GitHub (tema chiaro) ----
+   Classes (kw, st, ...) come from Pandoc; cl/fn/pm are added by code-colors.js. */
+pre code { color: inherit; }
+pre code span.co, pre code span.do, pre code span.cv, pre code span.an, pre code span.in { color: #59636e; }   /* comments */
+pre code span.st, pre code span.vs, pre code span.ss, pre code span.sc, pre code span.ch, pre code span.im { color: #0a3069; }  /* strings */
+pre code span.dv, pre code span.bn, pre code span.fl, pre code span.cn, pre code span.dt, pre code span.at, pre code span.bu { color: #0550ae; } /* numbers, constants, types */
+pre code span.kw, pre code span.cf, pre code span.pp, pre code span.er, pre code span.al, pre code span.wa { color: #cf222e; }  /* keywords */
+pre code span.fu, pre code span.ex { color: #6639ba; }                                                         /* functions */
+pre code span.va { color: #953800; }                                                                           /* variables */
+pre code span.op, pre code span.ot { color: inherit; }
+pre code span.cl { color: #0550ae; }   /* calls and constants (code-colors.js) */
+pre code span.fn { color: #6639ba; }   /* definitions (code-colors.js) */
+pre code span.pm { color: #953800; }   /* macro parameters (code-colors.js) */
+pre code span.nt { color: inherit; }
+
+/* C / C++ */
+pre[data-lang="cpp"] code span.at { color: #cf222e; }
+pre[data-lang="cpp"] code span.dt { color: #0550ae; }
+pre[data-lang="cpp"] code span.kw, pre[data-lang="cpp"] code span.pp { color: #cf222e; }
+/* JSON: blue keys, dark-blue string values, default punctuation, blue true/false/null */
+pre[data-lang="json"] code span.fu, pre[data-lang="json"] code span.ot { color: inherit; }
+pre[data-lang="json"] code span.kw { color: #0550ae; }
+/* YAML: blue keys, default colons and dashes */
+pre[data-lang="yaml"] code span.fu { color: #0550ae; }
+pre[data-lang="yaml"] code span.kw, pre[data-lang="yaml"] code span.at { color: inherit; }
+/* CMake */
+pre[data-lang="cmake"] code span.kw { color: #0550ae; }
+pre[data-lang="cmake"] code span.ot { color: #cf222e; }
+pre[data-lang="cmake"] code span.dv { color: inherit; }
+pre[data-lang="cmake"] code span.fu { color: #6639ba; }
+/* ini / properties: red key and "=", default value */
+pre[data-lang="ini"] code span.dt, pre[data-lang="ini"] code span.ot { color: #cf222e; }
+pre[data-lang="ini"] code span.st { color: inherit; }
+/* Bash: default commands, blue variables, red built-ins and keywords */
+pre[data-lang="bash"] code span.fu, pre[data-lang="bash"] code span.ex { color: inherit; }
+pre[data-lang="bash"] code span.bu { color: #cf222e; }
+pre[data-lang="bash"] code span.va { color: #0550ae; }
