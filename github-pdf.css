@@ -12,7 +12,7 @@ body {
     "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
   overflow-wrap: break-word;
 }
-a { color: var(--accent); text-decoration: underline; text-underline-offset: .15em; }
+a { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
 
 /* ---- Pagination ---- */
 section.doc { break-before: page; }                 /* each Markdown file starts on a new page */
@@ -108,7 +108,7 @@ nav.toc { break-after: page; }
 .toc ul { list-style: none; padding: 0; margin: 0; break-inside: auto; }
 .toc li { break-inside: avoid; margin: .15em 0; }
 .toc a { color: var(--fg); text-decoration: none; }
-.toc li.toc-1 { margin-top: .8em; font-weight: 600; font-size: 15pt; }
+.toc li.toc-1 { margin-top: .8em; font-size: 15pt; font-weight: 600; }
 .toc li.toc-2 { padding-left: 1.2em; font-size: 12pt; font-weight: 600; }
 .toc li.toc-3 { padding-left: 2.4em; font-size: .95em; color: var(--muted); }
 
@@ -130,7 +130,7 @@ nav.toc { break-after: page; }
 /* Invisible markers used only during generation to find the page of each heading */
 .hm { font-size: 1px; color: #fff; }
 
-/* ---- Colori del codice: tavolozza GitHub (tema chiaro) ----
+/* ---- Code colors: GitHub palette (light theme) ----
    Classes (kw, st, ...) come from Pandoc; cl/fn/pm are added by code-colors.js. */
 pre code { color: inherit; }
 pre code span.co, pre code span.do, pre code span.cv, pre code span.an, pre code span.in { color: #59636e; }   /* comments */
