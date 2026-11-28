@@ -12,7 +12,7 @@ body {
     "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
   overflow-wrap: break-word;
 }
-a { color: var(--accent); text-decoration: none; }
+a { color: var(--accent); text-decoration: underline; text-underline-offset: .15em; }
 
 /* ---- Pagination ---- */
 section.doc { break-before: page; }                 /* each Markdown file starts on a new page */
@@ -26,6 +26,8 @@ div.note, div.tip, div.important, div.warning, div.caution { break-inside: avoid
 thead { display: table-header-group; }
 /* Very tall blocks (class added by print-pdf.mjs) may split across pages; otherwise they would jump to the next page and leave gaps */
 .breakable { break-inside: auto !important; }
+/* A top-level heading after the first one of a file starts a new page (class added by print-pdf.mjs) */
+.new-page { break-before: page; margin-top: 0; }
 
 /* ---- Headings ---- */
 h1, h2, h3, h4, h5, h6 { margin: 1.5em 0 .7em; font-weight: 600; line-height: 1.25; }
@@ -105,9 +107,9 @@ nav.toc { break-after: page; }
 .toc-title { margin: 0 0 1em; font-size: 2em; font-weight: 600; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
 .toc ul { list-style: none; padding: 0; margin: 0; break-inside: auto; }
 .toc li { break-inside: avoid; margin: .15em 0; }
-.toc a { color: var(--fg); }
-.toc li.toc-1 { margin-top: .8em; font-weight: 600; }
-.toc li.toc-2 { padding-left: 1.2em; }
+.toc a { color: var(--fg); text-decoration: none; }
+.toc li.toc-1 { margin-top: .8em; font-weight: 600; font-size: 15pt; }
+.toc li.toc-2 { padding-left: 1.2em; font-size: 12pt; font-weight: 600; }
 .toc li.toc-3 { padding-left: 2.4em; font-size: .95em; color: var(--muted); }
 
 /* ---- Version tag on the cover page ---- */
@@ -121,7 +123,7 @@ nav.toc { break-after: page; }
 /* ---- Table of contents: leader dots and page number ---- */
 .toc li a { display: flex; align-items: baseline; }
 .toc .t { flex: 0 1 auto; }
-.toc .dots { flex: 1 1 1em; min-width: 1em; margin: 0 .25em; display: flex; justify-content: space-between; overflow: hidden; color: #000; }
+.toc .dots { font-size: 1rem; /* same dot size and spacing at every level */ flex: 1 1 1em; min-width: 1em; margin: 0 .25em; display: flex; justify-content: space-between; overflow: hidden; color: #000; }
 .toc .dots i { font-style: normal; }
 .toc .pn { flex: none; text-align: right; font-variant-numeric: tabular-nums; }
 

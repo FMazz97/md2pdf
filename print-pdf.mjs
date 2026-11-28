@@ -3,9 +3,11 @@
 //
 // Two passes: the first prints a draft PDF with invisible markers inside the headings, reads the page text
 // with pdf.js and finds the page of each heading; the second writes the numbers into the table of contents
-// (fixed width, so the pagination does not change) and prints the final PDF.
-import { readFile } from 'node:fs/promises';
+// (fixed width, so the pagination does not change) and prints the final PDF. A last step adds the running
+// header (document title and title of the current section) to every page except the cover.
+import { readFile, writeFile } from 'node:fs/promises';
 import puppeteer from 'puppeteer-core';
+import { stampHeaders } from './stamp-headers.mjs';
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
 
 const [, , url, out, exe] = process.argv;
@@ -54,6 +56,38 @@ async function pagesOfMarkers(buf, count) {
   return pages;
 }
 
+// BEGIN prepareHeadings
+// Runs in the page. Returns the headings listed in the table of contents, the sections for the running header,
+// and the document and table-of-contents titles. Each top-level heading after the first one in the same file
+// starts a new page and a new section. Invisible markers (@@H<n>@@) are put at the start of each heading so that
+// the page of every heading can be found in the printed PDF.
+const prepareHeadings = () => {
+  const text = (el) => el.textContent.replace(/\s+/g, ' ').trim();
+  const hs = [...document.querySelectorAll('section.doc h1, section.doc h2, section.doc h3')].filter((h) => h.id);
+  const index = new Map(hs.map((h, i) => [h, i]));
+  const entries = [];
+  document.querySelectorAll('section.doc').forEach((sec) => {
+    const inside = hs.filter((h) => sec.contains(h));
+    const tops = inside.filter((h) => h.tagName === 'H1');
+    tops.forEach((h, k) => {
+      if (k > 0) h.classList.add('new-page');
+      entries.push({ idx: index.get(h), text: text(h) });
+    });
+    if (!tops.length && inside.length) entries.push({ idx: index.get(inside[0]), text: text(inside[0]) });
+  });
+  const titleEl = document.querySelector('.tp-title');
+  const tocEl = document.querySelector('.toc-title');
+  const info = { ids: hs.map((h) => h.id), entries, title: titleEl ? text(titleEl) : '', tocTitle: tocEl ? text(tocEl) : '' };
+  hs.forEach((h, i) => {
+    const s = document.createElement('span');
+    s.className = 'hm';
+    s.textContent = `@@H${i}@@`;
+    h.prepend(s);
+  });
+  return info;
+};
+// END prepareHeadings
+
 const browser = await puppeteer.launch({ executablePath: exe, headless: true });
 try {
   const page = await browser.newPage();
@@ -78,17 +112,8 @@ try {
     });
   });
 
-  // Pass 1: invisible markers at the start of each heading that appears in the table of contents
-  const ids = await page.evaluate(() => {
-    const hs = [...document.querySelectorAll('section.doc h1, section.doc h2, section.doc h3')].filter((h) => h.id);
-    hs.forEach((h, i) => {
-      const s = document.createElement('span');
-      s.className = 'hm';
-      s.textContent = `@@H${i}@@`;
-      h.prepend(s);
-    });
-    return hs.map((h) => h.id);
-  });
+  // Pass 1: section detection (new page for extra top-level headings) and invisible heading markers
+  const { ids, entries, title, tocTitle } = await page.evaluate(prepareHeadings);
   await fillDots(page);
   const draft = await page.pdf(pdfOptions);
   const pages = await pagesOfMarkers(draft, ids.length);
@@ -104,7 +129,9 @@ try {
     });
   }, ids, pages);
   await fillDots(page); // the width of the numbers changed: recompute the dots
-  await page.pdf({ ...pdfOptions, path: out });
+  const finalPdf = await page.pdf(pdfOptions);
+  const sections = entries.map((e) => ({ page: pages[e.idx], text: e.text }));
+  await writeFile(out, await stampHeaders(finalPdf, { title, tocTitle, entries: sections }));
 } finally {
   await browser.close();
 }

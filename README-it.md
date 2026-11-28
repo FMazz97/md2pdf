@@ -56,6 +56,8 @@ Tutto ciò che non è elencato in `Files` (`LICENSE`, `assets/`, ...) resta fuor
 ## 5 Cosa fa
 
 - Ogni file Markdown inizia su una nuova pagina; titoli, elenchi, tabelle, blocchi di codice e alert non si spezzano a metà pagina, salvo quelli più alti del 40% dell'area utile (la soglia è in `print-pdf.mjs`), che possono continuare sulla pagina dopo per non lasciare vuoti.
+- In alto su ogni pagina, tranne la copertina, compare un'intestazione: a sinistra il titolo del documento (lo stesso della copertina), a destra il titolo della sezione corrente, cioè il titolo `#` del file.
+- Un file con più di un titolo `#` viene trattato come più file: ogni titolo `#` dopo il primo inizia una nuova pagina e una nuova sezione, elencata allo stesso livello nell'indice e mostrata nell'intestazione.
 - I link relativi tra i file diventano rimandi interni al PDF; i link verso file esclusi diventano solo testo.
 - Gli alert `> [!NOTE]`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION` hanno i colori GitHub. Il testo dopo il marcatore sulla stessa riga diventa il titolo del blocco: `> [!NOTE] Titolo personalizzato` (fuori dagli standard di GitHub, ma molto apprezzabile).
 - L'immagine HTML iniziale del README diventa un'immagine piatta, senza link.
@@ -72,15 +74,10 @@ Tutto ciò che non è elencato in `Files` (`LICENSE`, `assets/`, ...) resta fuor
 | `github-pdf.css` | Stile e regole di impaginazione |
 | `code-colors.js` | Colori del codice come su GitHub |
 | `print-pdf.mjs`, `package.json` | Stampa PDF con numeri di pagina e indice |
+| `stamp-headers.mjs` | Intestazione in alto (titolo del documento e sezione corrente) |
 | `pdf-config.example.psd1` | Modello delle impostazioni per progetto |
 
 ## 7 Problemi comuni
 
 - **Node.js o Pandoc non trovato**: installali e riapri il terminale; se il problema resta, verifica con `node --version` e `pandoc --version`.
 - **Emoji mancanti**: servono font emoji di sistema (su Windows è `Segoe UI Emoji`).
-
----
-
-## License
-
-Questo progetto è distribuito sotto licenza MIT - consulta il file [LICENSE](LICENSE) per maggiori dettagli.

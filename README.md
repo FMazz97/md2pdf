@@ -55,6 +55,8 @@ Everything not listed in `Files` (`LICENSE`, `assets/`, ...) stays out of the PD
 ## 5 What it does
 
 - Each Markdown file starts on a new page; headings, lists, tables, code blocks and alerts are not split across pages, except those taller than 40% of the usable area (the threshold is in `print-pdf.mjs`), which may continue on the next page to avoid leaving gaps.
+- A running header appears on every page except the cover: the document title on the left (same as the cover page) and the title of the current section, the top-level `#` heading of the file, on the right.
+- A file with more than one top-level `#` heading is treated as several files: each `#` heading after the first starts a new page and a new section, listed at the same level in the table of contents and shown in the header.
 - Relative links between files become internal references in the PDF; links to excluded files become plain text.
 - The alerts `> [!NOTE]`, `TIP`, `IMPORTANT`, `WARNING` and `CAUTION` use the GitHub colors. The text after the marker on the same line becomes the block title: `> [!NOTE] Custom title` (not part of the GitHub standard, but very handy).
 - The initial HTML image of the README becomes a plain image, without links.
@@ -71,15 +73,10 @@ Everything not listed in `Files` (`LICENSE`, `assets/`, ...) stays out of the PD
 | `github-pdf.css` | Style and pagination rules |
 | `code-colors.js` | Code colors as on GitHub |
 | `print-pdf.mjs`, `package.json` | PDF printing with page numbers and table of contents |
+| `stamp-headers.mjs` | Running header (document title and current section) |
 | `pdf-config.example.psd1` | Template for per-project settings |
 
 ## 7 Common problems
 
 - **Node.js or Pandoc not found**: install them and reopen the terminal; if the problem persists, check with `node --version` and `pandoc --version`.
 - **Missing emoji**: system emoji fonts are required (on Windows it is `Segoe UI Emoji`).
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

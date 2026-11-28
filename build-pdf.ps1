@@ -216,7 +216,7 @@ try {
   # 3) PDF printing through Node + puppeteer-core (page-number footer)
   $url = (New-Object System.Uri($html)).AbsoluteUri
   if (Test-Path $Output) { Remove-Item $Output -Force }
-  if (-not (Test-Path (Join-Path $Here 'node_modules\pdfjs-dist'))) {
+  if (-not ((Test-Path (Join-Path $Here 'node_modules\pdfjs-dist')) -and (Test-Path (Join-Path $Here 'node_modules\pdf-lib')))) {
     Push-Location $Here
     try {
       & npm.cmd install --no-audit --no-fund
